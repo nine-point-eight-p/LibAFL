@@ -26,6 +26,7 @@ pub use libafl_qemu_sys::{GuestAddr, GuestPhysAddr, GuestVirtAddr};
 pub use libafl_qemu_sys::{MapInfo, MmapPerms, MmapPermsIter};
 use num_traits::Num;
 use typed_builder::TypedBuilder;
+use log;
 
 use crate::{
     breakpoint::Breakpoint,
@@ -137,8 +138,8 @@ where
 impl Debug for GuestAddrKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            GuestAddrKind::Physical(paddr) => write!(f, "vaddr {paddr:x}"),
-            GuestAddrKind::Virtual(vaddr) => write!(f, "paddr {vaddr:x}"),
+            GuestAddrKind::Physical(paddr) => write!(f, "paddr {paddr:x}"),
+            GuestAddrKind::Virtual(vaddr) => write!(f, "vaddr {vaddr:x}"),
         }
     }
 }
@@ -363,6 +364,7 @@ where
             Err(exit_error) => match exit_error {
                 EmulatorExitError::UnexpectedExit => {
                     if let Some(snapshot_id) = exit_handler.snapshot_id.get() {
+                        log::warn!("Restore snapshot: unexpected exit");
                         exit_handler
                             .snapshot_manager
                             .borrow_mut()
@@ -391,6 +393,7 @@ where
                 EmulatorExitResult::SyncExit(sync_backdoor) => {
                     let sync_backdoor = sync_backdoor.borrow();
                     let command = sync_backdoor.command();
+                    log::warn!("Sync exit: {}", sync_backdoor);
                     (Some(command), Some(sync_backdoor.ret_reg()))
                 }
             };
@@ -690,7 +693,10 @@ where
         input: &S::Input,
         qemu_executor_state: &mut QemuExecutorState<QT, S>,
     ) -> Result<ExitHandlerResult<CM, E, QT, S>, ExitHandlerError> {
+        log::warn!("Start emulator loop");
         loop {
+            log::warn!("Loop iteration");
+
             // Insert input if the location is already known
             E::qemu_pre_run(self, qemu_executor_state, input);
 

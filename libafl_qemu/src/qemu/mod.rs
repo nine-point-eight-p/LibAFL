@@ -33,6 +33,7 @@ use num_traits::Num;
 #[cfg(feature = "python")]
 use pyo3::prelude::*;
 use strum::IntoEnumIterator;
+use log;
 
 use crate::{GuestAddrKind, GuestReg, Regs};
 
@@ -1166,6 +1167,8 @@ impl EmulatorMemoryChunk {
                     .write_mem(vaddr.try_into().unwrap(), input_sliced);
             },
         };
+
+        log::warn!("Write {} bytes to {:?}", input_sliced.len(), self.addr);
 
         input_sliced.len().try_into().unwrap()
     }

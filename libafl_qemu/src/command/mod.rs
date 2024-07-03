@@ -14,6 +14,7 @@ use libafl::{
 };
 use libafl_bolts::AsSlice;
 use num_enum::TryFromPrimitive;
+use log;
 
 #[cfg(emulation_mode = "systemmode")]
 use crate::QemuInstrumentationPagingFilter;
@@ -115,6 +116,13 @@ macro_rules! define_std_command_manager {
             ) -> Result<Rc<dyn IsCommand<Self, StdEmulatorExitHandler<SM>, QT, S>>, CommandError> {
                 let arch_regs_map: &'static EnumMap<ExitArgs, Regs> = get_exit_arch_regs();
                 let cmd_id: GuestReg = qemu.read_reg::<Regs, GuestReg>(arch_regs_map[ExitArgs::Cmd])?;
+
+                log::warn!("SyncBackdoor command:");
+                log::warn!("pc: {:#x}", qemu.read_reg::<_, u64>(Regs::Pc)?);
+                log::warn!("cmd_id (rax): {:#x}", qemu.read_reg::<_, u64>(arch_regs_map[ExitArgs::Cmd])?);
+                log::warn!("arg1 (rdi): {:#x}", qemu.read_reg::<_, u64>(arch_regs_map[ExitArgs::Arg1])?);
+                log::warn!("arg2 (rsi): {:#x}", qemu.read_reg::<_, u64>(arch_regs_map[ExitArgs::Arg2])?);
+                log::warn!("arg3 (rdx): {:#x}", qemu.read_reg::<_, u64>(arch_regs_map[ExitArgs::Arg3])?);
 
                 let cmd_parser = self
                     .native_command_parsers
@@ -257,6 +265,7 @@ where
         let qemu = emu.qemu();
         let emu_exit_handler = emu.exit_handler().borrow_mut();
 
+        log::warn!("Save snapshot: save command");
         let snapshot_id = emu_exit_handler.snapshot_manager_borrow_mut().save(qemu);
         emu_exit_handler
             .set_snapshot_id(snapshot_id)
@@ -391,6 +400,7 @@ where
     {
         let emu_exit_handler = emu.exit_handler().borrow_mut();
         let qemu = emu.qemu();
+        log::warn!("Save snapshot: start command");
         let snapshot_id = emu_exit_handler.snapshot_manager_borrow_mut().save(qemu);
 
         emu_exit_handler
@@ -446,6 +456,7 @@ where
             .snapshot_id()
             .ok_or(ExitHandlerError::SnapshotNotFound)?;
 
+        log::warn!("Restore snapshot: end command");
         emu_exit_handler
             .snapshot_manager_borrow_mut()
             .restore(&snapshot_id, emu.qemu())?;
