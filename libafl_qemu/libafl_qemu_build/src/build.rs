@@ -91,7 +91,8 @@ fn configure_qemu(
         .arg("--as-shared-lib")
         .arg(&format!("--target-list={cpu_target}-{target_suffix}"))
         // .arg("--disable-capstone")
-        .arg("--disable-bsd-user");
+        .arg("--disable-bsd-user")
+        .arg("--enable-capstone");
 
     if cfg!(feature = "paranoid_debug") {
         cmd.arg("--enable-debug")
