@@ -159,6 +159,10 @@ pub fn generate(
         bindings
             .allowlist_type("ARMCPU")
             .allowlist_type("ARMv7MState")
+    } else if cpu_target == "riscv32" {
+        bindings
+            .allowlist_type("RISCVCPU")
+            .allowlist_type("CPURISCVState")
     } else {
         bindings
     };

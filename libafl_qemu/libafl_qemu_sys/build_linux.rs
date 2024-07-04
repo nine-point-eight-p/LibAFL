@@ -35,12 +35,12 @@ pub fn build() {
 
     // Make sure we have at most one architecutre feature set
     // Else, we default to `x86_64` - having a default makes CI easier :)
-    assert_unique_feature!("arm", "aarch64", "i386", "x86_64", "mips", "ppc", "hexagon");
+    assert_unique_feature!("arm", "aarch64", "i386", "x86_64", "mips", "ppc", "hexagon", "riscv32");
 
     // Make sure that we don't have BE set for any architecture other than arm and mips
     // Sure aarch64 may support BE, but its not in common usage and we don't
     // need it yet and so haven't tested it
-    assert_unique_feature!("be", "aarch64", "i386", "x86_64", "hexagon");
+    assert_unique_feature!("be", "aarch64", "i386", "x86_64", "hexagon", "riscv32");
 
     let cpu_target = if cfg!(feature = "x86_64") {
         "x86_64".to_string()
@@ -56,6 +56,8 @@ pub fn build() {
         "ppc".to_string()
     } else if cfg!(feature = "hexagon") {
         "hexagon".to_string()
+    } else if cfg!(feature = "riscv32") {
+        "riscv32".to_string()
     } else {
         env::var("CPU_TARGET").unwrap_or_else(|_| {
             println!(
@@ -66,7 +68,7 @@ pub fn build() {
     };
     println!("cargo:rerun-if-env-changed=CPU_TARGET");
     println!("cargo:rustc-cfg=cpu_target=\"{cpu_target}\"");
-    println!("cargo::rustc-check-cfg=cfg(cpu_target, values(\"x86_64\", \"arm\", \"aarch64\", \"i386\", \"mips\", \"ppc\", \"hexagon\"))");
+    println!("cargo::rustc-check-cfg=cfg(cpu_target, values(\"x86_64\", \"arm\", \"aarch64\", \"i386\", \"mips\", \"ppc\", \"hexagon\", \"riscv32\"))");
 
     let jobs = env::var("NUM_JOBS")
         .ok()

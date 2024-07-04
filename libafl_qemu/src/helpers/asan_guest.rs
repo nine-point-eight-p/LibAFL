@@ -138,6 +138,7 @@ impl QemuAsanGuestHelper {
     cpu_target = "arm",
     cpu_target = "i386",
     cpu_target = "mips",
+    cpu_target = "riscv32",
     cpu_target = "ppc"
 ))]
 impl QemuAsanGuestHelper {
