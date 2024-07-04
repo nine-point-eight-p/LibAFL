@@ -26,6 +26,7 @@ mips = [] # build qemu for mips (el, use with the 'be' feature of mips be)
 ppc = [] # build qemu for powerpc
 hexagon = [] # build qemu for hexagon
 riscv32 = [] # build qemu for riscv32
+riscv64 = [] # build qemu for riscv64
 
 be = []
 

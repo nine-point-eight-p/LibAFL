@@ -22,7 +22,7 @@ fn main() {
     println!("cargo:rustc-check-cfg=cfg(nightly)");
     println!(r#"cargo::rustc-check-cfg=cfg(emulation_mode, values("usermode", "systemmode"))"#);
     println!(
-        r#"cargo::rustc-check-cfg=cfg(cpu_target, values("arm", "aarch64", "hexagon", "i386", "mips", "ppc", "riscv32", "x86_64"))"#
+        r#"cargo::rustc-check-cfg=cfg(cpu_target, values("arm", "aarch64", "hexagon", "i386", "mips", "ppc", "riscv32", "riscv64", "x86_64"))"#
     );
     nightly();
     host_specific::build();

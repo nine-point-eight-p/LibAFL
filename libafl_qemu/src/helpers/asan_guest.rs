@@ -126,7 +126,12 @@ pub struct QemuAsanGuestHelper {
     mappings: Vec<QemuAsanGuestMapping>,
 }
 
-#[cfg(any(cpu_target = "aarch64", cpu_target = "x86_64", feature = "clippy"))]
+#[cfg(any(
+    cpu_target = "aarch64",
+    cpu_target = "riscv64",
+    cpu_target = "x86_64",
+    feature = "clippy"
+))]
 impl QemuAsanGuestHelper {
     const HIGH_SHADOW_START: GuestAddr = 0x02008fff7000;
     const HIGH_SHADOW_END: GuestAddr = 0x10007fff7fff;
