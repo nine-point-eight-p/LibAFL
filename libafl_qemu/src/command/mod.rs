@@ -119,10 +119,13 @@ macro_rules! define_std_command_manager {
 
                 log::warn!("SyncBackdoor command:");
                 log::warn!("pc: {:#x}", qemu.read_reg::<_, u64>(Regs::Pc)?);
-                log::warn!("cmd_id (rax): {:#x}", qemu.read_reg::<_, u64>(arch_regs_map[ExitArgs::Cmd])?);
-                log::warn!("arg1 (rdi): {:#x}", qemu.read_reg::<_, u64>(arch_regs_map[ExitArgs::Arg1])?);
-                log::warn!("arg2 (rsi): {:#x}", qemu.read_reg::<_, u64>(arch_regs_map[ExitArgs::Arg2])?);
-                log::warn!("arg3 (rdx): {:#x}", qemu.read_reg::<_, u64>(arch_regs_map[ExitArgs::Arg3])?);
+                log::warn!("cmd_id: {:#x}", qemu.read_reg::<_, u64>(arch_regs_map[ExitArgs::Cmd])?);
+                log::warn!("arg1: {:#x}", qemu.read_reg::<_, u64>(arch_regs_map[ExitArgs::Arg1])?);
+                log::warn!("arg2: {:#x}", qemu.read_reg::<_, u64>(arch_regs_map[ExitArgs::Arg2])?);
+                log::warn!("arg3: {:#x}", qemu.read_reg::<_, u64>(arch_regs_map[ExitArgs::Arg3])?);
+                log::warn!("arg4: {:#x}", qemu.read_reg::<_, u64>(arch_regs_map[ExitArgs::Arg4])?);
+                log::warn!("arg5: {:#x}", qemu.read_reg::<_, u64>(arch_regs_map[ExitArgs::Arg5])?);
+                log::warn!("arg6: {:#x}", qemu.read_reg::<_, u64>(arch_regs_map[ExitArgs::Arg6])?);
 
                 let cmd_parser = self
                     .native_command_parsers
